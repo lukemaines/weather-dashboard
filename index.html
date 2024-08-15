@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/style.css">
     <title>Weather Dashboard</title>
 </head>
 <body>
-    <h1>How's the weather?</h1>
-    
+    <div class="container">
+        <div class="side-bar">
+            <h1>How's the weather?</h1>
+            <form id="city-search">
+                <input type="text" id="city-search-input" placeholder="Enter a city" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    <div class="search-results">
+        <div id="weather-information"></div>
+    </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
