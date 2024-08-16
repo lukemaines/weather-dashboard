@@ -4,6 +4,7 @@ document.getElementById('city-search').addEventListener('submit', function(event
     event.preventDefault();
     
     const cityInput = document.getElementById('city-search-input').value;
+    saveSearch(cityInput);
     getCoordinates(cityInput)
         .then(coords => getWeatherData(coords.lat, coords.lon))
         .then(weatherData => {
@@ -15,6 +16,47 @@ document.getElementById('city-search').addEventListener('submit', function(event
         });
 });
 
+function saveSearch(city) {
+    let searches = JSON.parse(localStorage.getItem('searches')) || [];
+    
+    if (!searches.includes(city)) {
+        searches.push(city);
+        localStorage.setItem('searches', JSON.stringify(searches));
+        displaySearches();
+    }
+}
+
+function displaySearches() {
+    const sidebar = document.querySelector('.side-bar');
+    const searchForm = document.getElementById('city-search');
+    sidebar.appendChild(searchForm);
+    
+    let searches = JSON.parse(localStorage.getItem('searches')) || [];
+    
+    searches.forEach(city => {
+        const cityButton = document.createElement('button');
+        cityButton.textContent = city;
+        cityButton.classList.add('search-button');
+        
+       
+        cityButton.addEventListener('click', function() {
+            getCoordinates(city)
+                .then(coords => getWeatherData(coords.lat, coords.lon))
+                .then(weatherData => {
+                    displayWeather(weatherData);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('City not found. Please try again.');
+                });
+        });
+        
+        sidebar.appendChild(cityButton);
+    });
+}
+
+
+window.onload = displaySearches;
 function getCoordinates(city) {
     const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
     return fetch(geoUrl)
